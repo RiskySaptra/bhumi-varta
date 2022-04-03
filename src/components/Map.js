@@ -5,9 +5,19 @@ import { fetchLocation, fetchCrowdPoint } from "../actions";
 
 import LocationNavigation from "./LocationNavigation";
 
-function Map({ dispatch, locations, crowdPoint }) {
-  console.log(locations, "locations");
-  console.log(crowdPoint, "crowdPoint");
+function Map({ dispatch, locations, crowdPoint, theme }) {
+  const themeMode = {
+    light: {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      url: `https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}`,
+    },
+    dark: {
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      url: `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`,
+    },
+  };
   const [position, setPosition] = useState({
     pos: [-6.2, 106.816666],
     map: null,
@@ -37,8 +47,8 @@ function Map({ dispatch, locations, crowdPoint }) {
         whenCreated={(mapClass) => setPosition({ ...position, map: mapClass })}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution={themeMode[theme].attribution}
+          url={themeMode[theme].url}
         />
 
         {locations.data.length > 0 &&
@@ -47,6 +57,7 @@ function Map({ dispatch, locations, crowdPoint }) {
               <Popup>{itm.name}</Popup>
             </Marker>
           ))}
+
         {crowdPoint.data.length > 0 &&
           crowdPoint.pos.map((itm, idx) => (
             <Marker key={idx} position={[itm.latitude, itm.longitude]}>
@@ -122,6 +133,7 @@ const mapStateToProps = function (state) {
   return {
     crowdPoint: state.crowdPoint,
     locations: state.locations,
+    theme: state.theme,
   };
 };
 

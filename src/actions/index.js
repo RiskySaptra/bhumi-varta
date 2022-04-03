@@ -1,5 +1,12 @@
 import { locationApi, crowdPoint } from "./locationApi";
 
+export const setTheme = (theme) => {
+  return {
+    type: "SET_THEME",
+    theme: theme,
+  };
+};
+
 export const setLocation = ({ data }) => {
   return {
     type: "SET_LOCATION",

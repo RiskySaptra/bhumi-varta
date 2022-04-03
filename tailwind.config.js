@@ -1,6 +1,6 @@
 module.exports = {
   purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
-  darkMode: "className",
+  darkMode: "class",
   theme: {
     container: {
       center: true,
