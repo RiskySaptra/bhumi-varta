@@ -2,26 +2,41 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { connect } from "react-redux";
 import { fetchLocation, fetchCrowdPoint } from "../actions";
+import L from "leaflet";
 
 import LocationNavigation from "./LocationNavigation";
+import RightMenu from "./RightMenu";
+
+const dark = L.tileLayer(
+  "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+);
+const light = L.tileLayer(`https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}`);
+
+function turnLightMap(map) {
+  dark.removeFrom(map);
+  light.addTo(map);
+}
+
+function turnDarkMap(map) {
+  light.removeFrom(map);
+  dark.addTo(map);
+}
 
 function Map({ dispatch, locations, crowdPoint, theme }) {
-  const themeMode = {
-    light: {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      url: `https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}`,
-    },
-    dark: {
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-      url: `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`,
-    },
-  };
+  // initiate positions
   const [position, setPosition] = useState({
     pos: [-6.2, 106.816666],
     map: null,
   });
+
+  const mapColor = (map) => {
+    if (theme === "dark" && map) {
+      turnDarkMap(map);
+    }
+    if (theme === "light" && map) {
+      turnLightMap(map);
+    }
+  };
 
   const changePos = (pos) => {
     const { map } = position;
@@ -29,16 +44,19 @@ function Map({ dispatch, locations, crowdPoint, theme }) {
   };
 
   useEffect(() => {
+    mapColor(position.map);
+
     const dispatchData = () => {
       dispatch(fetchCrowdPoint());
       return dispatch(fetchLocation());
     };
     dispatchData();
-  }, [dispatch]);
+  }, [dispatch, theme, position.map]);
 
   return (
     <div className="relative">
       <LocationNavigation changePos={changePos} data={locations.data} />
+      <RightMenu />
 
       <MapContainer
         center={position.pos}
@@ -47,8 +65,8 @@ function Map({ dispatch, locations, crowdPoint, theme }) {
         whenCreated={(mapClass) => setPosition({ ...position, map: mapClass })}
       >
         <TileLayer
-          attribution={themeMode[theme].attribution}
-          url={themeMode[theme].url}
+          attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+          url={`https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}`}
         />
 
         {locations.data.length > 0 &&

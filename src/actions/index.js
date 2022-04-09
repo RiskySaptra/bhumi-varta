@@ -1,6 +1,12 @@
 import { locationApi, crowdPoint } from "./locationApi";
 
 export const setTheme = (theme) => {
+  const root = window.document.documentElement;
+  const isDark = theme === "dark";
+  root.classList.remove(isDark ? "light" : "dark");
+  root.classList.add(theme);
+  localStorage.setItem("color-theme", theme);
+
   return {
     type: "SET_THEME",
     theme: theme,
@@ -50,6 +56,7 @@ export const setCrowdPoint = ({ data }) => {
   };
 };
 
+// api action
 export const fetchLocation = () => {
   return async (dispatch) => {
     const data = await locationApi();

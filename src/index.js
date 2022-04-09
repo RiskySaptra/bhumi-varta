@@ -6,13 +6,10 @@ import { Provider } from "react-redux";
 //components
 import App from "./App";
 import "./index.css";
-import { ThemeProvider } from "./components/ThemeContext";
 
 ReactDOM.render(
-  <ThemeProvider>
-    <Provider store={stores}>
-      <App />
-    </Provider>
-  </ThemeProvider>,
+  <Provider store={stores}>
+    <App />
+  </Provider>,
   document.getElementById("root")
 );
