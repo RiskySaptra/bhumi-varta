@@ -23,8 +23,10 @@ const DropDown = ({ dispatch, language }) => {
         value={language}
         onChange={(e) => languageToggle(e.target.value)}
       >
-        {languages.map((c) => (
-          <option value={c.value}>{c.name}</option>
+        {languages.map((c, idx) => (
+          <option key={idx} value={c.value}>
+            {c.name}
+          </option>
         ))}
       </select>
     </div>
