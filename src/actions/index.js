@@ -1,5 +1,13 @@
 import { locationApi, crowdPoint } from "./locationApi";
 
+export const setLanguage = (language) => {
+  localStorage.setItem("lang", language);
+  return {
+    type: "SET_LANGUAGE",
+    language: language,
+  };
+};
+
 export const setTheme = (theme) => {
   const root = window.document.documentElement;
   const isDark = theme === "dark";

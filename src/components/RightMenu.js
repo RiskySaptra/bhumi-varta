@@ -23,7 +23,7 @@ function RightMenu() {
     );
   return (
     <>
-      <div className="absolute z-20 right-0 top-0 h-full w-[500px] bg-white drop-shadow-lg">
+      <div className="absolute z-20 right-0 top-0 h-full w-full lg:w-[500px] bg-white drop-shadow-lg">
         <div className="flex justify-end">
           <button onClick={() => setHide(!hide)} className="m-3">
             <svg
