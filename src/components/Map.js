@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { connect } from "react-redux";
 import { fetchLocation, fetchCrowdPoint } from "../actions";
 import L from "leaflet";
-
 import LocationNavigation from "./LocationNavigation";
 import RightMenu from "./RightMenu";
 
@@ -29,22 +28,18 @@ function Map({ dispatch, locations, crowdPoint, theme }) {
     map: null,
   });
 
-  const mapColor = (map) => {
-    if (theme === "dark" && map) {
-      turnDarkMap(map);
-    }
-    if (theme === "light" && map) {
-      turnLightMap(map);
-    }
-  };
-
   const changePos = (pos) => {
     const { map } = position;
     if (map) map.flyTo(pos);
   };
 
   useEffect(() => {
-    mapColor(position.map);
+    if (theme === "dark" && position.map) {
+      turnDarkMap(position.map);
+    }
+    if (theme === "light" && position.map) {
+      turnLightMap(position.map);
+    }
 
     const dispatchData = () => {
       dispatch(fetchCrowdPoint());
